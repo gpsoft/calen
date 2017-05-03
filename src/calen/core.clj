@@ -126,8 +126,14 @@
   []
   (clojure.string/join " " dow-names))
 
-(defn ->fig
-  "図形化する"
+(defn day->fig
+  "1日分を図形化する"
+  [d]
+  (let [strd (if (pos? d) (format "%2d" d) "")]
+    {:width 2 :height 1 :body [strd]}))
+
+(defn month->fig
+  "ひと月分を図形化する"
   [y m]
 
   (let [headings {:width 20
@@ -140,22 +146,20 @@
     (fig/vertical
       0
       headings
-      (fig/grid (map (fn [d] {:width 2 :height 1 :body [(str d)]}) ds) 7 1 0))
+      (fig/grid (map day->fig ds) 7 1 0))
     )
   )
 
-(defn ->fig
-  [y m]
-  (let [body (concat [(render-ym y m)
-                      (render-dows)]
-                     (render-days y m))]
-    {:width 20
-     :height (count body)
-     :body body}))
+(defn year->fig
+  "1年分を図形化する"
+  [y numcols]
+  (fig/grid (map #(month->fig y %) (range 1 13)) numcols 2 1))
 
 (comment
-  (fig/prn-fig (->fig 2017 5))
-  (render-days 2017 5))
+  (fig/prn-fig (month->fig 2017 5))
+  (render-days 2017 5)
+  (fig/prn-fig (year->fig 2018 4))
+  )
 
 (defn -main
   "I don't do a whole lot ... yet."

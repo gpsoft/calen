@@ -3,7 +3,7 @@
 ;; データ構造
 ;; fig: {:width 3, :height 2, :body ["a" "b"]}
 
-(defn- space [len] (apply str (repeat len "_")))
+(defn- space [len] (apply str (repeat len " ")))
 (defn- line [n] (repeat n ""))
 (defn- wcount [s] (count (.getBytes s "Shift_JIS")))
 
