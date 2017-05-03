@@ -1,4 +1,5 @@
 (ns calen.core
+  (:require [calen.fig :as fig])
   (:gen-class))
 
 ;; 略語とデータ構造
@@ -28,6 +29,7 @@
 
 (def ad1 [1 1 1])  ;; 0001-01-01
 (def dow-ad1 1)    ;; 0001-01-01は月曜
+(def dow-names ["日" "月" "火" "水" "木" "金" "土"])
 
 (defn- y-of [[y]] y)
 (defn- m-of [[_ m]] m)
@@ -112,8 +114,48 @@
 (defn dow-name
   "曜日名"
   [dow]
-  (let [names ["日" "月" "火" "水" "木" "金" "土"]]
-    (nth names dow)))
+  (nth dow-names dow))
+
+
+
+(defn render-ym
+  [y m]
+  (str y "年" m "月"))
+
+(defn render-dows
+  []
+  (clojure.string/join " " dow-names))
+
+(defn ->fig
+  "図形化する"
+  [y m]
+
+  (let [headings {:width 20
+                  :height 2
+                  :body [(render-ym y m)
+                         (render-dows)]}
+        bomdow (bom-dow y m)
+        nd (num-days y m)
+        ds (map inc (range (- bomdow) nd))]
+    (fig/vertical
+      0
+      headings
+      (fig/grid (map (fn [d] {:width 2 :height 1 :body [(str d)]}) ds) 7 1 0))
+    )
+  )
+
+(defn ->fig
+  [y m]
+  (let [body (concat [(render-ym y m)
+                      (render-dows)]
+                     (render-days y m))]
+    {:width 20
+     :height (count body)
+     :body body}))
+
+(comment
+  (fig/prn-fig (->fig 2017 5))
+  (render-days 2017 5))
 
 (defn -main
   "I don't do a whole lot ... yet."
