@@ -1,5 +1,9 @@
 (def project 'calen)
-(def version "0.1.0-SNAPSHOT")
+(def version "1.0.0")
+(def github "https://github.com/gpsoft/calen")
+
+;; The project skeleton was created by
+;; $ boot -d boot/new new -t app -n calen
 
 (set-env! :resource-paths #{"resources" "src"}
           :source-paths   #{"test"}
@@ -7,16 +11,16 @@
                             [adzerk/boot-test "RELEASE" :scope "test"]])
 
 (task-options!
- aot {:namespace   #{'calen.core}}
- pom {:project     project
-      :version     version
-      :description "FIXME: write description"
-      :url         "http://example/FIXME"
-      :scm         {:url "https://github.com/yourname/calen"}
-      :license     {"Eclipse Public License"
-                    "http://www.eclipse.org/legal/epl-v10.html"}}
- jar {:main        'calen.core
-      :file        (str "calen-" version "-standalone.jar")})
+  aot {:namespace   #{'calen.main}}
+  pom {:project     project
+       :version     version
+       :description "Print calendar"
+       :url         github
+       :scm         {:url github}
+       :license     {"Eclipse Public License"
+                     "http://www.eclipse.org/legal/epl-v10.html"}}
+  jar {:main        'calen.main
+       :file        (str "calen-" version "-standalone.jar")})
 
 (deftask build
   "Build the project locally as a JAR."
@@ -27,7 +31,7 @@
 (deftask run
   "Run the project."
   [a args ARG [str] "the arguments for the application."]
-  (require '[calen.core :as app])
+  (require '[calen.main :as app])
   (apply (resolve 'app/-main) args))
 
 (require '[adzerk.boot-test :refer [test]])

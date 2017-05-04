@@ -1,50 +1,31 @@
-# calen
+# Calen
 
-FIXME: description
+STDOUTにカレンダーを出力する。
 
 ## Installation
 
-Download from http://example.com/FIXME.
+    $ git clone https://github.com/gpsoft/calen.git
+    $ boot build
 
 ## Usage
 
-FIXME: explanation
+    $ java -jar target/calen-1.0.0-standalone.jar ARGS
 
-Run the project directly:
-
-    $ boot run
-
-Run the project's tests (they'll fail until you edit them):
-
-    $ boot test
-
-Build an uberjar from the project:
-
-    $ boot build
-
-Run the uberjar:
-
-    $ java -jar target/calen-0.1.0-SNAPSHOT-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
+    ARGS: YEAR [MONTH or NUMOFCOLUMNS(in negative integer)]
 
 ## Examples
 
-...
+    $ java -jar target/calen-1.0.0-standalone.jar 2017 5
+    $ java -jar target/calen-1.0.0-standalone.jar 2017 -2
 
-### Bugs
+ロケール指定が必要かも。
 
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+    $ LC_ALL=ja_JP.utf8 \
+      java -jar target/calen-1.0.0-standalone.jar 2017 5
+    2017年5月           
+    日 月 火 水 木 金 土
+        1  2  3  4  5  6
+     7  8  9 10 11 12 13
+    14 15 16 17 18 19 20
+    21 22 23 24 25 26 27
+    28 29 30 31         

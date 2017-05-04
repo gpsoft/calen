@@ -1,6 +1,5 @@
 (ns calen.core
-  (:require [calen.fig :as fig])
-  (:gen-class))
+  (:require [calen.fig :as fig]))
 
 ;; 略語とデータ構造
 ;;
@@ -35,9 +34,13 @@
 (defn- m-of [[_ m]] m)
 (defn- d-of [[_ _ d]] d)
 
-(defn- dow-add [dow-base num-days]
+(defn- dow-add
+  "ある曜日(dow-base)の日から
+  何日(num-days)か後の曜日"
+  [dow-base num-days]
   (-> (+ dow-base num-days)
       (mod 7)))
+
 
 (defn leap?
   "うるう年か?
@@ -119,49 +122,48 @@
 
 
 (defn render-ym
+  "年月ラベル"
   [y m]
   (str y "年" m "月"))
 
 (defn render-dows
-  []
-  (clojure.string/join " " dow-names))
+  "曜日ラベル"
+  [hgap]
+  (clojure.string/join (fig/space hgap) dow-names))
 
 (defn day->fig
   "1日分を図形化する"
   [d]
   (let [strd (if (pos? d) (format "%2d" d) "")]
-    {:width 2 :height 1 :body [strd]}))
+    (fig/->fig 2 1 [strd])))
 
 (defn month->fig
   "ひと月分を図形化する"
   [y m]
-
-  (let [headings {:width 20
-                  :height 2
-                  :body [(render-ym y m)
-                         (render-dows)]}
+  (let [hgap 1
+        vgap 0
+        heading-dow (render-dows hgap)
+        headings (fig/->fig
+                   (count heading-dow) 2
+                   [(render-ym y m) heading-dow])
         bomdow (bom-dow y m)
         nd (num-days y m)
         ds (map inc (range (- bomdow) nd))]
     (fig/vertical
-      0
+      vgap
       headings
-      (fig/grid (map day->fig ds) 7 1 0))
-    )
-  )
+      (fig/grid (map day->fig ds) 7 hgap vgap))))
 
 (defn year->fig
   "1年分を図形化する"
   [y numcols]
-  (fig/grid (map #(month->fig y %) (range 1 13)) numcols 2 1))
+  (let [hgap 3
+        vgap 1]
+    (fig/grid
+      (map #(month->fig y %) (range 1 13))
+      numcols hgap vgap)))
 
 (comment
   (fig/prn-fig (month->fig 2017 5))
-  (render-days 2017 5)
   (fig/prn-fig (year->fig 2018 4))
   )
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))

@@ -3,9 +3,10 @@
 ;; データ構造
 ;; fig: {:width 3, :height 2, :body ["a" "b"]}
 
-(defn- space [len] (apply str (repeat len " ")))
-(defn- line [n] (repeat n ""))
-(defn- wcount [s] (count (.getBytes s "Shift_JIS")))
+(defn ->fig [w h b] {:width w, :height h, :body b})
+(defn space [len] (apply str (repeat len " ")))
+(defn vspace [n] (repeat n ""))
+(defn wcount [s] (count (.getBytes s "Shift_JIS")))
 
 (defn vertical
   "図形を上下に連結"
@@ -18,7 +19,7 @@
         b2 (:body fig2)]
     {:width (max w1 w2)
      :height (+ h1 gap h2)
-     :body (concat b1 (line gap) b2)}))
+     :body (concat b1 (vspace gap) b2)}))
 
 (defn horizon
   "図形を水平に連結"
@@ -27,8 +28,8 @@
         w2 (:width fig2)
         h1 (:height fig1)
         h2 (:height fig2)
-        b1 (concat (:body fig1) (line h2))
-        b2 (concat (:body fig2) (line h1))
+        b1 (concat (:body fig1) (vspace h2))
+        b2 (concat (:body fig2) (vspace h1))
         h (max h1 h2)
         concat-with-gap
         (fn [l r]
